@@ -56,7 +56,7 @@ const Navbar = () => {
             },
           }}
         >
-          Sociopedia
+          Sanveer's Social Media App
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
