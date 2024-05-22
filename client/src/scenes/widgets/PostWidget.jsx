@@ -10,6 +10,7 @@ import {
   import WidgetWrapper from "components/WidgetWrapper";
   import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
+  import { useNavigate } from "react-router-dom";
   import { setPost } from "state";
   
   const PostWidget = ({
@@ -23,6 +24,7 @@ import {
     likes,
     comments,
   }) => {
+    const navigate = useNavigate(); 
     const [isComments, setIsComments] = useState(false);
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
@@ -48,7 +50,9 @@ import {
     };
   
     return (
-      <WidgetWrapper m="2rem 0">
+      <WidgetWrapper m="2rem 0"
+      onClick={() => navigate(`/post/${postId}`)}
+      >
         <Friend
           friendId={postUserId}
           name={name}
