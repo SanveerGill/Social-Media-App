@@ -116,16 +116,22 @@ import {
           </IconButton>
         </FlexBetween>
         {isComments && commentDetails.length > 0 && (
-          <Box mt="0.5rem">
+          <Box mt="0.5rem" sx={{ transform: 'scale(0.95)', ml: '1rem', mt: '1rem' }}>
             {commentDetails.map((comment, i) => (
-              <Box key={`${name}-${i}`}>
-                <Divider />
-                <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
+              <Box key={`${name}-${i}`} >
+                <Divider sx={{mb: '1rem'}} />
+                <Friend
+                  friendId={comment.userId}
+                  name={`${comment.firstName} ${comment.lastName}`}
+                  subtitle={comment.location}
+                  userPicturePath={comment.userPicturePath}
+                />
+                <Typography sx={{ color: main, m: "0.5rem 0", pt: '0.5rem'}}>
                   {comment.description}
                 </Typography>
               </Box>
             ))}
-            <Divider />
+            <Divider sx={{mt: '1rem'}}  />
           </Box>
         )}
       </WidgetWrapper>
