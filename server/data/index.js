@@ -142,6 +142,20 @@ export const users = [
   },
 ];
 
+export const comments = [
+  {
+  _id: new mongoose.Types.ObjectId(),
+  userId: userIds[1],
+  firstName: "Steve",
+  lastName: "Ralph",
+  location: "New York, CA",
+  description: "This is a sample comment.",
+  picturePath: "post1.jpeg",
+  userPicturePath: "p3.jpeg",
+  postId: new mongoose.Types.ObjectId("664986cf400d893c3edda314")
+  }
+]
+
 export const posts = [
   {
     _id: new mongoose.Types.ObjectId(),

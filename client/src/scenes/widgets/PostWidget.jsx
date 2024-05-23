@@ -8,7 +8,7 @@ import {
   import FlexBetween from "components/FlexBetween";
   import Friend from "components/Friend";
   import WidgetWrapper from "components/WidgetWrapper";
-  import { useState } from "react";
+  import { useEffect, useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
   import { useNavigate } from "react-router-dom";
   import { setPost } from "state";
@@ -26,6 +26,7 @@ import {
   }) => {
     const navigate = useNavigate(); 
     const [isComments, setIsComments] = useState(false);
+    const [commentDetails, setCommentDetails] = useState([]);
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
@@ -49,17 +50,35 @@ import {
       dispatch(setPost({ post: updatedPost }));
     };
   
+    useEffect(() => {
+      const fetchCommentDetails = async () => {
+        if (comments && comments.length > 0) {
+          const commentDetailsPromises = comments.map(async (commentId) => {
+            const response = await fetch(`http://localhost:3001/posts/comments/${commentId}`, {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            return response.json();
+          });
+          const fetchedCommentDetails = await Promise.all(commentDetailsPromises);
+          setCommentDetails(fetchedCommentDetails);
+        }
+      };
+  
+      fetchCommentDetails();
+    }, [comments, token]);
+
     return (
-      <WidgetWrapper m="2rem 0"
-      onClick={() => navigate(`/post/${postId}`)}
-      >
+      <WidgetWrapper m="2rem 0">
         <Friend
           friendId={postUserId}
           name={name}
           subtitle={location}
           userPicturePath={userPicturePath}
         />
-        <Typography color={main} sx={{ mt: "1rem" }}>
+        <Typography color={main} sx={{ mt: "1rem", "&:hover": {cursor: "pointer" } }} onClick={() => navigate(`/post/${postId}`)}>
           {description}
         </Typography>
         {picturePath && (
@@ -88,7 +107,7 @@ import {
               <IconButton onClick={() => setIsComments(!isComments)}>
                 <ChatBubbleOutlineOutlined />
               </IconButton>
-              <Typography>{comments.length}</Typography>
+              <Typography>{comments ? comments.length : 0}</Typography>
             </FlexBetween>
           </FlexBetween>
   
@@ -96,13 +115,13 @@ import {
             <ShareOutlined />
           </IconButton>
         </FlexBetween>
-        {isComments && (
+        {isComments && commentDetails.length > 0 && (
           <Box mt="0.5rem">
-            {comments.map((comment, i) => (
+            {commentDetails.map((comment, i) => (
               <Box key={`${name}-${i}`}>
                 <Divider />
                 <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                  {comment}
+                  {comment.description}
                 </Typography>
               </Box>
             ))}
