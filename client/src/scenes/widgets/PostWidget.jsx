@@ -4,7 +4,7 @@ import {
     FavoriteOutlined,
     ShareOutlined,
   } from "@mui/icons-material";
-  import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+  import { IconButton, Typography, useTheme } from "@mui/material";
   import FlexBetween from "components/FlexBetween";
   import Friend from "components/Friend";
   import WidgetWrapper from "components/WidgetWrapper";
@@ -12,6 +12,7 @@ import {
   import { useDispatch, useSelector } from "react-redux";
   import { useNavigate } from "react-router-dom";
   import { setPost } from "state";
+  import Comments from "./CommentsWidget";
   
   const PostWidget = ({
     postId,
@@ -116,24 +117,8 @@ import {
           </IconButton>
         </FlexBetween>
         {isComments && commentDetails.length > 0 && (
-          <Box mt="0.5rem" sx={{ transform: 'scale(0.95)', ml: '1rem', mt: '1rem' }}>
-            {commentDetails.map((comment, i) => (
-              <Box key={`${name}-${i}`} >
-                <Divider sx={{mb: '1rem'}} />
-                <Friend
-                  friendId={comment.userId}
-                  name={`${comment.firstName} ${comment.lastName}`}
-                  subtitle={comment.location}
-                  userPicturePath={comment.userPicturePath}
-                />
-                <Typography sx={{ color: main, m: "0.5rem 0", pt: '0.5rem'}}>
-                  {comment.description}
-                </Typography>
-              </Box>
-            ))}
-            <Divider sx={{mt: '1rem'}}  />
-          </Box>
-        )}
+        <Comments commentDetails={commentDetails} main={main} />
+      )}
       </WidgetWrapper>
     );
   };
