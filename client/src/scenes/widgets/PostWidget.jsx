@@ -8,11 +8,12 @@ import {
   import FlexBetween from "components/FlexBetween";
   import Friend from "components/Friend";
   import WidgetWrapper from "components/WidgetWrapper";
-  import { useEffect, useState } from "react";
+  import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
   import { useNavigate } from "react-router-dom";
   import { setPost } from "state";
   import Comments from "./CommentsWidget";
+  import MyComment from "./MyCommentWidget";
   
   const PostWidget = ({
     postId,
@@ -27,10 +28,10 @@ import {
   }) => {
     const navigate = useNavigate(); 
     const [isComments, setIsComments] = useState(false);
-    const [commentDetails, setCommentDetails] = useState([]);
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
+    const loggedInUserPicturePath = useSelector((state) => state.user.picturePath);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
   
@@ -50,26 +51,6 @@ import {
       const updatedPost = await response.json();
       dispatch(setPost({ post: updatedPost }));
     };
-  
-    useEffect(() => {
-      const fetchCommentDetails = async () => {
-        if (comments && comments.length > 0) {
-          const commentDetailsPromises = comments.map(async (commentId) => {
-            const response = await fetch(`http://localhost:3001/posts/comments/${commentId}`, {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
-            return response.json();
-          });
-          const fetchedCommentDetails = await Promise.all(commentDetailsPromises);
-          setCommentDetails(fetchedCommentDetails);
-        }
-      };
-  
-      fetchCommentDetails();
-    }, [comments, token]);
 
     return (
       <WidgetWrapper m="2rem 0">
@@ -116,8 +97,11 @@ import {
             <ShareOutlined />
           </IconButton>
         </FlexBetween>
-        {isComments && commentDetails.length > 0 && (
-        <Comments commentDetails={commentDetails} main={main} />
+        {isComments && comments.length > 0 && (
+        <>
+        <Comments commentDetails={comments} main={main} />
+        <MyComment picturePath={loggedInUserPicturePath} postId={postId} />
+        </>
       )}
       </WidgetWrapper>
     );
