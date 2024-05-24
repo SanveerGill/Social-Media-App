@@ -42,6 +42,9 @@ export const authSlice = createSlice({
     setComment: (state, action) => {
       const { postId, comment } = action.payload;
       const post = state.posts.find((post) => post._id === postId);
+      if (!post.comments) {
+        post.comments = []; 
+      }
       if (post) {
         post.comments.push(comment);
       }

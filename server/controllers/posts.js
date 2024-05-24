@@ -84,16 +84,6 @@ export const getPost = async (req, res) => {
   }
 };
 
-export const getComment = async (req, res) => {
-  try {
-    const { commentId } = req.params;
-    const comment = await Comment.findById(commentId);
-    res.status(200).json(comment);
-  } catch (err) {
-    res.status(404).json({ message: err.message });
-  }
-};
-
 /* UPDATE */
 export const likePost = async (req, res) => {
   try {

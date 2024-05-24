@@ -97,7 +97,7 @@ import {
             <ShareOutlined />
           </IconButton>
         </FlexBetween>
-        {isComments && comments.length > 0 && (
+        {isComments && (
         <>
         <Comments commentDetails={comments} main={main} />
         <MyComment picturePath={loggedInUserPicturePath} postId={postId} />
