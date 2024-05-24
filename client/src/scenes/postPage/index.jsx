@@ -3,14 +3,12 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Navbar from "scenes/navbar";
-import FriendListWidget from "scenes/widgets/FriendListWidget";
 import PostWidget from "scenes/widgets/PostWidget";
 
 const PostPage = () => {
   const [post, setPost] = useState(null);
   const { postId } = useParams();
   const token = useSelector((state) => state.token);
-  const { _id: _userId } = useSelector((state) => state.user); 
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
   const getPost = async () => {

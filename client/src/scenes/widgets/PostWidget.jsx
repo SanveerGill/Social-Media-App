@@ -4,7 +4,7 @@ import {
     FavoriteOutlined,
     ShareOutlined,
   } from "@mui/icons-material";
-  import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+  import { IconButton, Typography, useTheme } from "@mui/material";
   import FlexBetween from "components/FlexBetween";
   import Friend from "components/Friend";
   import WidgetWrapper from "components/WidgetWrapper";
@@ -12,6 +12,8 @@ import {
   import { useDispatch, useSelector } from "react-redux";
   import { useNavigate } from "react-router-dom";
   import { setPost } from "state";
+  import Comments from "./CommentsWidget";
+  import MyComment from "./MyCommentWidget";
   
   const PostWidget = ({
     postId,
@@ -29,6 +31,7 @@ import {
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
+    const loggedInUserPicturePath = useSelector((state) => state.user.picturePath);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
   
@@ -48,18 +51,16 @@ import {
       const updatedPost = await response.json();
       dispatch(setPost({ post: updatedPost }));
     };
-  
+
     return (
-      <WidgetWrapper m="2rem 0"
-      onClick={() => navigate(`/post/${postId}`)}
-      >
+      <WidgetWrapper m="2rem 0">
         <Friend
           friendId={postUserId}
           name={name}
           subtitle={location}
           userPicturePath={userPicturePath}
         />
-        <Typography color={main} sx={{ mt: "1rem" }}>
+        <Typography color={main} sx={{ mt: "1rem", "&:hover": {cursor: "pointer" } }} onClick={() => navigate(`/post/${postId}`)}>
           {description}
         </Typography>
         {picturePath && (
@@ -88,7 +89,7 @@ import {
               <IconButton onClick={() => setIsComments(!isComments)}>
                 <ChatBubbleOutlineOutlined />
               </IconButton>
-              <Typography>{comments.length}</Typography>
+              <Typography>{comments ? comments.length : 0}</Typography>
             </FlexBetween>
           </FlexBetween>
   
@@ -96,19 +97,12 @@ import {
             <ShareOutlined />
           </IconButton>
         </FlexBetween>
-        {isComments && (
-          <Box mt="0.5rem">
-            {comments.map((comment, i) => (
-              <Box key={`${name}-${i}`}>
-                <Divider />
-                <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                  {comment}
-                </Typography>
-              </Box>
-            ))}
-            <Divider />
-          </Box>
-        )}
+        {isComments && comments.length > 0 && (
+        <>
+        <Comments commentDetails={comments} main={main} />
+        <MyComment picturePath={loggedInUserPicturePath} postId={postId} />
+        </>
+      )}
       </WidgetWrapper>
     );
   };
