@@ -38,8 +38,8 @@ const Comments = ({ commentDetails, main }) => {
                 height="auto"
                 alt="post"
                 style={{
-                  maxWidth: isImageExpanded ? "100%" : "25%",
-                  maxHeight: isImageExpanded ? "auto" : "25%",
+                  maxWidth: "25%",
+                  maxHeight: "25%",
                   borderRadius: "0.75rem",
                   marginTop: "0.75rem",
                   cursor: "pointer"
